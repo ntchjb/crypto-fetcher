@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
-import { catchError, firstValueFrom, retry } from 'rxjs';
+import { catchError, firstValueFrom, ObservableInput, retry } from 'rxjs';
 import { genericRetryStrategy } from 'src/http/retry';
 import { URL } from 'url';
 import {
@@ -18,10 +18,10 @@ import { Chart, Coin, OHLCPrice, TrendingCoin } from '../price/price.model';
 export class CoinGeckoService {
   private readonly logger = new Logger(CoinGeckoService.name);
   private readonly baseUrl: string;
-  private readonly retryStrategy = genericRetryStrategy({
-    maxRetryAttempts: 3,
-    scalingDuration: 1000,
-  });
+  private readonly retryStrategy: (
+    error: any,
+    retryCount: number,
+  ) => ObservableInput<any>;
 
   constructor(
     private readonly httpService: HttpService,
@@ -31,8 +31,17 @@ export class CoinGeckoService {
       'COINGECKO_BASEURL',
       'https://api.coingecko.com/api/v3',
     );
+    const maxRetry = configService.get<number>('COINGECKO_MAXRETRY', 3);
+    const scalingDuration = configService.get<number>(
+      'COINGECKO_RETRY_DURATION',
+      1000,
+    );
+    this.retryStrategy = genericRetryStrategy({
+      maxRetryAttempts: maxRetry,
+      scalingDuration: scalingDuration,
+    });
     if (this.baseUrl[this.baseUrl.length - 1] !== '/') {
-      this.baseUrl += '/';
+      this.baseUrl = `${this.baseUrl}/`;
     }
   }
 
@@ -84,16 +93,18 @@ export class CoinGeckoService {
         ),
     );
 
-    return data.data.coins.map((coin) => ({
-      id: coin.item.id,
-      largeImg: coin.item.large,
-      marketCapRank: coin.item.market_cap_rank,
-      name: coin.item.name,
-      priceBtc: coin.item.price_btc,
-      smallImg: coin.item.small,
-      symbol: coin.item.symbol,
-      thumbImg: coin.item.thumb,
-    }));
+    return data.data.coins
+      .sort((a, b) => a.item.score - b.item.score)
+      .map((coin) => ({
+        id: coin.item.id,
+        name: coin.item.name,
+        symbol: coin.item.symbol,
+        thumbImg: coin.item.thumb,
+        smallImg: coin.item.small,
+        largeImg: coin.item.large,
+        marketCapRank: coin.item.market_cap_rank,
+        priceBtc: coin.item.price_btc,
+      }));
   }
 
   public async getPriceChart(

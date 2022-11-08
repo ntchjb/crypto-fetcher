@@ -6,7 +6,7 @@ export interface Coin {
 
 export type SearchCoin = Coin & {
   api_symbol: string;
-  market_cap_rank: string;
+  market_cap_rank: number;
   thumb: string;
   large: string;
 };
