@@ -17,4 +17,4 @@ function getMaxProfit(prices: number[]): number {
   return maxProfit;
 }
 
-getMaxProfit([7, 1, 5, 3, 6, 4]);
+console.log(getMaxProfit([7, 1, 5, 3, 6, 4]));
