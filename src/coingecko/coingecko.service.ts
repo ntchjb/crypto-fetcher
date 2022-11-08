@@ -29,9 +29,9 @@ export class CoinGeckoService {
   ) {
     this.baseUrl = configService.get<string>(
       'COINGECKO_BASEURL',
-      'https://api.coingecko.com/api/v3',
+      'https://api.coingecko.com/api/v3/',
     );
-    const maxRetry = configService.get<number>('COINGECKO_MAXRETRY', 3);
+    const maxRetry = configService.get<number>('COINGECKO_MAX_RETRY', 3);
     const scalingDuration = configService.get<number>(
       'COINGECKO_RETRY_DURATION',
       1000,

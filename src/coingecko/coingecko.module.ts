@@ -11,8 +11,8 @@ import { CoinGeckoService } from './coingecko.service';
     HttpModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        timeout: configService.get('HTTP_TIMEOUT', 30000),
-        maxRedirects: configService.get('HTTP_MAX_REDIRECTS', 5),
+        timeout: configService.get('COINGECKO_HTTP_TIMEOUT', 30000),
+        maxRedirects: configService.get('COINGECKO_HTTP_MAX_REDIRECTS', 5),
       }),
       inject: [ConfigService],
     }),
