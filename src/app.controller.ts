@@ -30,6 +30,7 @@ export class AppController {
     this.logger.debug('cached data', key, data);
     // Check for null and undefined
     if (data == null) {
+      this.logger.debug('no cache found, fetching...', key);
       data = await queryFunc();
       await this.cacheManager.set(key, data, ttl);
     }
