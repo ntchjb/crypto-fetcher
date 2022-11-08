@@ -2,6 +2,8 @@ export interface Coin {
   id: string;
   symbol: string;
   name: string;
+  thumbImg: string;
+  largeImg: string;
 }
 
 export type TrendingCoin = Coin & {

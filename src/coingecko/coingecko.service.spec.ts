@@ -79,11 +79,15 @@ describe('CoinGecko service', () => {
           id: 'coin-id-1',
           name: 'coin-name-1',
           symbol: 'coin-symbol-1',
+          thumbImg: 'url-1',
+          largeImg: 'url-large-1',
         },
         {
           id: 'coin-id-2',
           name: 'coin-name-2',
           symbol: 'coin-symbol-2',
+          thumbImg: 'url-2',
+          largeImg: 'url-large-2',
         },
       ]);
     });

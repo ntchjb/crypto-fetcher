@@ -74,6 +74,8 @@ export class CoinGeckoService {
       id: coin.id,
       name: coin.name,
       symbol: coin.symbol,
+      thumbImg: coin.thumb,
+      largeImg: coin.large,
     }));
   }
 
