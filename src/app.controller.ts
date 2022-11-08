@@ -59,7 +59,7 @@ export class AppController {
     @Query('interval', new EnumValidationPipe(ChartInterval))
     interval: ChartInterval,
   ): Promise<Chart> {
-    const cacheKey = `api:coins:${coinId}:chart`;
+    const cacheKey = `api:coins:${coinId}:chart:${interval}`;
     let ttl = 10;
     switch (interval) {
       case ChartInterval.DAY:
@@ -81,7 +81,7 @@ export class AppController {
     @Query('interval', new EnumValidationPipe(ChartInterval))
     interval: ChartInterval,
   ): Promise<OHLCPrice> {
-    const cacheKey = `api:coins:${coinId}:ohlc`;
+    const cacheKey = `api:coins:${coinId}:ohlc:${interval}`;
     let ttl = 10;
     switch (interval) {
       case ChartInterval.DAY:
